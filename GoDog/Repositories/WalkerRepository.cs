@@ -1,20 +1,20 @@
-﻿using GoDog.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using GoDog.Models;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
-using System.Collections.Generic;
 
 namespace GoDog.Repositories
 {
     public class WalkerRepository : IWalkerRepository
     {
         private readonly IConfiguration _config;
-
-        // The constructor accepts an IConfiguration object as a parameter. This class comes from the ASP.NET framework and is useful for retrieving things out of the appsettings.json file like connection strings.
         public WalkerRepository(IConfiguration config)
         {
             _config = config;
         }
-
         public SqlConnection Connection
         {
             get
@@ -22,18 +22,16 @@ namespace GoDog.Repositories
                 return new SqlConnection(_config.GetConnectionString("DefaultConnection"));
             }
         }
-
         public List<Walker> GetAllWalkers()
         {
             using (SqlConnection conn = Connection)
             {
                 conn.Open();
+
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"
-                        SELECT Id, [Name], ImageUrl, NeighborhoodId
-                        FROM Walker
-                    ";
+                    cmd.CommandText = "SELECT Id, [Name], ImageUrl, NeighborhoodId FROM Walker";
+                    cmd.CommandText = "SELECT w.Id as WalkerId, w.Name as WalkerName, w.ImageUrl, w.NeighborhoodId, n.Name as NeighName FROM Walker w JOIN Neighborhood n ON n.Id = w.NeighborhoodId";
 
                     using (SqlDataReader reader = cmd.ExecuteReader())
                     {
@@ -42,33 +40,35 @@ namespace GoDog.Repositories
                         {
                             Walker walker = new Walker
                             {
-                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                                Name = reader.GetString(reader.GetOrdinal("Name")),
+                                Id = reader.GetInt32(reader.GetOrdinal("WalkerId")),
+                                Name = reader.GetString(reader.GetOrdinal("WalkerName")),
                                 ImageUrl = reader.GetString(reader.GetOrdinal("ImageUrl")),
-                                NeighborhoodId = reader.GetInt32(reader.GetOrdinal("NeighborhoodId"))
+                                NeighborhoodId = reader.GetInt32(reader.GetOrdinal("NeighborhoodId")),
+                                Neighborhood = new Neighborhood
+                                {
+                                    Id = reader.GetInt32(reader.GetOrdinal("NeighborhoodId")),
+                                    Name = reader.GetString(reader.GetOrdinal("NeighName"))
+                                }
                             };
 
                             walkers.Add(walker);
                         }
-
                         return walkers;
+                       
                     }
                 }
             }
         }
-
         public Walker GetWalkerById(int id)
         {
             using (SqlConnection conn = Connection)
             {
                 conn.Open();
+
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = @"
-                        SELECT Id, [Name], ImageUrl, NeighborhoodId
-                        FROM Walker
-                        WHERE Id = @id
-                    ";
+                    cmd.CommandText = "SELECT Id, [Name], ImageUrl, NeighborhoodId FROM Walker WHERE Id = @id";
+                    cmd.CommandText = "SELECT w.Id as WalkerId, w.Name as WalkerName, w.ImageUrl, w.NeighborhoodId, n.Name as NeighName FROM Walker w JOIN Neighborhood n ON n.Id = w.NeighborhoodId WHERE w.Id = @id";
 
                     cmd.Parameters.AddWithValue("@id", id);
 
@@ -76,12 +76,19 @@ namespace GoDog.Repositories
                     {
                         if (reader.Read())
                         {
+
                             Walker walker = new Walker
                             {
-                                Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                                Name = reader.GetString(reader.GetOrdinal("Name")),
+                            
+                                Id = reader.GetInt32(reader.GetOrdinal("WalkerId")),
+                                Name = reader.GetString(reader.GetOrdinal("WalkerName")),
                                 ImageUrl = reader.GetString(reader.GetOrdinal("ImageUrl")),
-                                NeighborhoodId = reader.GetInt32(reader.GetOrdinal("NeighborhoodId"))
+                                NeighborhoodId = reader.GetInt32(reader.GetOrdinal("NeighborhoodId")),
+                                Neighborhood = new Neighborhood
+                                {
+                                    Id = reader.GetInt32(reader.GetOrdinal("NeighborhoodId")),
+                                    Name = reader.GetString(reader.GetOrdinal("Neighborhood Name"))
+                                }
                             };
 
                             return walker;
