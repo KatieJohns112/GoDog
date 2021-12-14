@@ -15,5 +15,6 @@ namespace GoDog.Models
         public string Phone { get; set; }
         public string ImageUrl { get; set; }
         public Neighborhood Neighborhood { get; set; }
+        public List<Dog> Dogs { get; set; }
     }
 }
