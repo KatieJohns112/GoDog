@@ -11,6 +11,7 @@ namespace GoDog.Repositories
         List<Dog> GetAllDogs();
         Dog GetDogById(int id);
         void AddDog(Dog dog);
+        void UpdateDog(Dog dog);
 
     }
 }
