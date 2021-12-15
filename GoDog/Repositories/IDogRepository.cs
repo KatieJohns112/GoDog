@@ -15,5 +15,6 @@ namespace GoDog.Repositories
         void DeleteDog(int dogId);
         //update IDogRepository with new methods in dog repository
         List<Dog> GetDogsByOwnerId(int ownerId);
+       
     }
 }
