@@ -10,6 +10,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using GoDog.Repositories;
 
+
 namespace GoDog
 {
     public class Startup
@@ -28,6 +29,7 @@ namespace GoDog
             services.AddTransient<IWalkerRepository, WalkerRepository>();
             services.AddTransient<IOwnerRepository, OwnerRepository>();
             services.AddTransient<IDogRepository, DogRepository>();
+            services.AddTransient<INeighborhoodRepository, NeighborhoodRepository>();
 
         }
 

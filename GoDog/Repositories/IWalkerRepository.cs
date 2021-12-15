@@ -8,5 +8,7 @@ namespace GoDog.Repositories
     {
         List<Walker> GetAllWalkers();
         Walker GetWalkerById(int id);
+        //update methods here when a new one is created in WalkerRepository
+        List<Walker> GetWalkersInNeighborhood(int neighborhoodId);
     }
 }

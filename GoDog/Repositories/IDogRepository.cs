@@ -13,5 +13,7 @@ namespace GoDog.Repositories
         void AddDog(Dog dog);
         void UpdateDog(Dog dog);
         void DeleteDog(int dogId);
+        //update IDogRepository with new methods in dog repository
+        List<Dog> GetDogsByOwnerId(int ownerId);
     }
 }
