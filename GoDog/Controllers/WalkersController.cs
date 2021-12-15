@@ -12,6 +12,7 @@ namespace GoDog.Controllers
     public class WalkersController : Controller
     {
         private readonly IWalkerRepository _walkerRepo;
+        private readonly IWalkerRepository _walkRepo;
 
         // ASP.NET will give us an instance of our Walker Repository. This is called "Dependency Injection"
         public WalkersController(IWalkerRepository walkerRepository)
@@ -30,6 +31,8 @@ namespace GoDog.Controllers
         public ActionResult Details(int id)
         {
             Walker walker = _walkerRepo.GetWalkerById(id);
+  
+
 
             if (walker == null)
             {
