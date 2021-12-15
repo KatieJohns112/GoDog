@@ -37,6 +37,7 @@ namespace GoDog.Controllers
         }
 
         // GET: WalkersController/Details/5
+        //refactored the owner details method to create a ProfileViewModel
         public ActionResult Details(int id)
         {
             Owner owner = _ownerRepo.GetOwnerById(id);

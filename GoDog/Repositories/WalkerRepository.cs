@@ -67,8 +67,8 @@ namespace GoDog.Repositories
 
                 using (SqlCommand cmd = conn.CreateCommand())
                 {
-                    cmd.CommandText = "SELECT Id, [Name], ImageUrl, NeighborhoodId FROM Walker WHERE Id = @id";
-                    cmd.CommandText = "SELECT w.Id as WalkerId, w.Name as WalkerName, w.ImageUrl, w.NeighborhoodId, n.Name as NeighName FROM Walker w JOIN Neighborhood n ON n.Id = w.NeighborhoodId WHERE w.Id = @id";
+                    
+                    cmd.CommandText = "SELECT w.Id as WalkerId, w.Name as WalkerName, w.ImageUrl, w.NeighborhoodId, n.Name as NeighborhoodName FROM Walker w JOIN Neighborhood n ON n.Id = w.NeighborhoodId WHERE w.Id = @id";
 
                     cmd.Parameters.AddWithValue("@id", id);
 
@@ -87,7 +87,7 @@ namespace GoDog.Repositories
                                 Neighborhood = new Neighborhood
                                 {
                                     Id = reader.GetInt32(reader.GetOrdinal("NeighborhoodId")),
-                                    Name = reader.GetString(reader.GetOrdinal("Neighborhood Name"))
+                                    Name = reader.GetString(reader.GetOrdinal("NeighborhoodName"))
                                 }
                             };
 
@@ -101,6 +101,7 @@ namespace GoDog.Repositories
                 }
             }
         }
+        //gets a list of walkers in each neighborhood 
         public List<Walker> GetWalkersInNeighborhood(int neighborhoodId)
         {
             using (SqlConnection conn = Connection)

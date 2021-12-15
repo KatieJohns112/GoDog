@@ -162,6 +162,7 @@ namespace GoDog.Repositories
                 }
             }
         }
+        //this method gets a list of dogs by the owner id
         public List<Dog> GetDogsByOwnerId(int ownerId)
         {
             using (SqlConnection conn = Connection)
