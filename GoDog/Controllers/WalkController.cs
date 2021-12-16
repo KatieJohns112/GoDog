@@ -6,55 +6,39 @@ using System.Linq;
 using System.Threading.Tasks;
 using GoDog.Models;
 using GoDog.Repositories;
-using GoDog.Models.ViewModel;
 
 namespace GoDog.Controllers
 {
-    public class WalkersController : Controller
+    public class WalkController : Controller
     {
         private readonly IWalkerRepository _walkerRepo;
         private readonly IWalkRepository _walkRepo;
 
-        // ASP.NET will give us an instance of our Walker Repository. This is called "Dependency Injection"
-        public WalkersController(IWalkerRepository walkerRepository, IWalkRepository walkRepository)
+        public WalkController(IWalkRepository walkRepository,
+                               IWalkerRepository walkerRepository)
         {
-            _walkerRepo = walkerRepository;
             _walkRepo = walkRepository;
+            _walkerRepo = walkerRepository;
         }
-        // GET: WalkersController
+        // GET: WalkController
         public ActionResult Index()
         {
-            List<Walker> walkers = _walkerRepo.GetAllWalkers();
-
-            return View(walkers);
+            return View();
         }
 
-        // GET: WalkersController/Details/5
+        // GET: WalkController/Details/5
         public ActionResult Details(int id)
         {
-            Walker walker = _walkerRepo.GetWalkerById(id);
-            List<Walk> walks = _walkRepo.GetWalksByWalkerId(id);
-            WalkerFormViewModel vm = new WalkerFormViewModel
-            {
-                Walker = walker,
-                Walks = walks
-
-            };
-            if (walker == null)
-            {
-                return NotFound();
-            }
-
-            return View(vm);
+            return View();
         }
 
-        // GET: WalkersController/Create
+        // GET: WalkController/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: WalkersController/Create
+        // POST: WalkController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(IFormCollection collection)
@@ -69,13 +53,13 @@ namespace GoDog.Controllers
             }
         }
 
-        // GET: WalkersController/Edit/5
+        // GET: WalkController/Edit/5
         public ActionResult Edit(int id)
         {
             return View();
         }
 
-        // POST: WalkersController/Edit/5
+        // POST: WalkController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, IFormCollection collection)
@@ -90,13 +74,13 @@ namespace GoDog.Controllers
             }
         }
 
-        // GET: WalkersController/Delete/5
+        // GET: WalkController/Delete/5
         public ActionResult Delete(int id)
         {
             return View();
         }
 
-        // POST: WalkersController/Delete/5
+        // POST: WalkController/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, IFormCollection collection)

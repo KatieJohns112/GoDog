@@ -7,12 +7,10 @@ namespace GoDog.Models
 {
     public class Walk
     {
-        public int id { get; set; }
-        public DateTime TotalTime { get; set; }
+        public int Id { get; set; }
+        public DateTime Date { get; set; }
         public int Duration { get; set; }
         public int WalkerId { get; set; }
         public int DogId { get; set; }
-        public Dog Dog {get; set;}
-        public Owner Owner { get; set; }
     }
 }
