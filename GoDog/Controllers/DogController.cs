@@ -65,51 +65,81 @@ namespace GoDog.Controllers
         }
 
         // GET: DogController/Edit/5
+        [Authorize]
         public ActionResult Edit(int id)
         {
+            int ownerId = GetCurrentUserId();
             Dog dog = _dogRepo.GetDogById(id);
 
-            if (dog == null)
+            return View(dog);
+
+            if(ownerId != dog.OwnerId)
             {
-                return NotFound();
+                return StatusCode(404);
+            }
+            else
+            {
+                return View(dog);
             }
 
             return View(dog);
         }
 
         // POST: DogController/Edit/5
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(int id, Dog dog)
         {
             try
             {
+                int ownerId = GetCurrentUserId();
                 _dogRepo.UpdateDog(dog);
 
+                if(ownerId == dog.OwnerId)
+                {
+                    _dogRepo.UpdateDog(dog);
+                }
                 return RedirectToAction("Index");
             }
-            catch (Exception ex)
+            catch
             {
                 return View(dog);
             }
         }
 
         // GET: DogController/Delete/5
+        [Authorize]
         public ActionResult Delete(int id)
         {
+            int ownerId = GetCurrentUserId();
             Dog dog = _dogRepo.GetDogById(id);
 
-            return View(dog);
+            if(dog.OwnerId != ownerId)
+            {
+                return StatusCode(404);
+            }
+            else
+            {
+                return View(dog);
+            }
         }
 
         // POST: DogController/Delete/5
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Delete(int id, Dog dog)
         {
             try
             {
+                int ownerId = GetCurrentUserId();
                 _dogRepo.DeleteDog(id);
+
+                if(dog.OwnerId == ownerId)
+                {
+                    _dogRepo.DeleteDog(dog.Id);
+                }
                 return RedirectToAction(nameof(Index));
             }
             catch(Exception ex)
