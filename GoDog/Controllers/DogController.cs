@@ -6,7 +6,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using GoDog.Models;
 using GoDog.Repositories;
-
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
 
 namespace GoDog.Controllers
 {
@@ -20,9 +21,12 @@ namespace GoDog.Controllers
             _dogRepo = dogRepository;
         }
         // GET: DogController
+        [Authorize]
         public ActionResult Index()
         {
-            List<Dog> dogs = _dogRepo.GetAllDogs();
+            int ownerId = GetCurrentUserId();
+
+            List<Dog> dogs = _dogRepo.GetDogsByOwnerId(ownerId);
 
             return View(dogs);
         }
@@ -42,12 +46,17 @@ namespace GoDog.Controllers
         // POST: DogController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public ActionResult Create(Dog dog)
         {
             try
             {
+                // update the dogs OwnerId to the current user's Id
+                dog.OwnerId = GetCurrentUserId();
+
                 _dogRepo.AddDog(dog);
-                return RedirectToAction(nameof(Index));
+
+                return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
@@ -107,6 +116,11 @@ namespace GoDog.Controllers
             {
                 return View();
             }
+        }
+        private int GetCurrentUserId()
+        {
+            string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return int.Parse(id);
         }
     }
 }

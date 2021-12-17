@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using GoDog.Repositories;
-
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace GoDog
 {
@@ -26,11 +26,15 @@ namespace GoDog
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
+
             services.AddTransient<IWalkerRepository, WalkerRepository>();
             services.AddTransient<IOwnerRepository, OwnerRepository>();
             services.AddTransient<IDogRepository, DogRepository>();
             services.AddTransient<INeighborhoodRepository, NeighborhoodRepository>();
             services.AddTransient<IWalkRepository, WalkRepository>();
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(options => options.LoginPath = "/Owners/LogIn");
 
         }
 
@@ -52,6 +56,7 @@ namespace GoDog
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
